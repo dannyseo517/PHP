@@ -4,6 +4,7 @@
 		var $turn;
 		var $position;
 		var $win = false;
+		var $turn_count = 0;
 		
 		function __construct($squares){
 			$this->position = str_split($squares);
@@ -11,29 +12,60 @@
 		
 		function gameStart(){
 			if($this->winner('X') == true){
-				echo "GAME OVER X wins";
+				echo "<center>GAME OVER <br> X wins </center>";
 				$this->win = true;
 			}else if($this->winner('O') == true){
-				echo "GAME OVER O wins";
+				echo "<center>GAME OVER <br> O wins </center>";
 				$this->win = true;
-			}			
+			}
 			
 			$this->turn();
+			
+			
+			if($this->turn_count == 9 && $this->win == false){
+				echo "<center>It's a tie</center>";
+			}
+			
 			$this->display();
+			
 		}
 		
 		function turn(){
-			$turn_count = 0;
+			
 			for($i = 0; $i < 9; $i++){
 				if($this->position[$i] == "X" ||
 				   $this->position[$i] == "O"){
-					$turn_count++;
+					$this->turn_count++;
 				}
 			}
-			if(($turn_count%2) == 1){
-				$this->turn = "O";
+			
+			if(($this->turn_count%2) == 1){
+				$this->computer_turn();
 			}else{
 				$this->turn = "X";
+			}
+		}
+		
+		function computer_turn(){
+			$available_moves = array();
+			for($i = 0; $i < 9; $i++){
+				if ($this->position[$i] == '-'){
+					array_push($available_moves, $i);
+				}
+			}
+			if(count($available_moves) > 1){
+				$random_move = $available_moves[array_rand($available_moves)];
+				
+				if($this->win == false){	
+					$move_found = true;
+					$this->newposition = $this->position;
+					$this->newposition = $this->position;
+					$this->newposition[$random_move] = "O";
+					$move = implode($this->newposition);
+					$link = '?board='.$move;
+					header("Location:".$link);
+					die();
+				}
 			}
 		}
 		
@@ -99,9 +131,10 @@
 			if($token <> '-') return '<td>'.$token.'</td>';
 			$this->newposition = $this->position;
 			$this->newposition = $this->position;
-			$this->newposition[$which] = $this->turn;
+			$this->newposition[$which] = "X";
 			$move = implode($this->newposition);
 			$link = '?board='.$move;
+			
 			if($this->win == false){
 				return '<td class="unselected"><a href="'.$link.'">-</a></td>';
 			}else{
@@ -122,7 +155,7 @@
 	echo '<div style="width:350px; margin:0 auto">';
 	$game->gameStart();
 	$game->restart_game();
-	echo '</div>';
-	
+	echo '</div>';	
 	
 ?>
+	
