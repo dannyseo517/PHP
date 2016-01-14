@@ -1,15 +1,18 @@
 
 <?php
 	class Game {
+		//global variables
 		var $turn;
 		var $position;
 		var $win = false;
 		var $turn_count = 0;
 		
+		//constructor
 		function __construct($squares){
 			$this->position = str_split($squares);
 		}
 		
+		//start the game and also displays winner when game is over
 		function gameStart(){
 			if($this->winner('X') == true){
 				echo "<center>GAME OVER <br> X wins </center>";
@@ -30,6 +33,7 @@
 			
 		}
 		
+		//calculates who's turn it is
 		function turn(){
 			
 			for($i = 0; $i < 9; $i++){
@@ -46,6 +50,7 @@
 			}
 		}
 		
+		//method for computing computer's actions
 		function computer_turn(){
 			$available_moves = array();
 			for($i = 0; $i < 9; $i++){
@@ -69,6 +74,7 @@
 			}
 		}
 		
+		//method that checks for winner
 		function winner($token){
 			
 			//check for horizontal win combo
@@ -114,6 +120,7 @@
 			return $result;
 		}
 		
+		//display function for the board
 		function display(){
 			echo '<link rel="stylesheet" type="text/css" href="mystyle.css">';
 			echo '<table border="1" cols="3" style=" font-size:40px; font-weight:bold">';
@@ -126,6 +133,7 @@
 			echo "</table>";
 		}
 		
+		//show the content of the cell in the board
 		function show_cell($which){
 			$token = $this->position[$which];
 			if($token <> '-') return '<td>'.$token.'</td>';
@@ -143,6 +151,7 @@
 			
 		}
 		
+		//method for handling game restart
 		function restart_game(){
 			$link = '?board='."---------";
 			echo '<br><br><br>';
